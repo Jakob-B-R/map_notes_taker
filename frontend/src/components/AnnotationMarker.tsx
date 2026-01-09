@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-import type { Annotation, AnnotationType } from '../types';
+import type { Annotation } from '../types';
 import { useAnnotationStore } from '../stores/annotationStore';
 import { useAnnotationTypesStore } from '../stores/annotationTypesStore';
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { MapSummary } from '../types';
 import './MapSelector.css';
 
@@ -19,18 +19,47 @@ export function MapSelector({
 }: MapSelectorProps) {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [newMapName, setNewMapName] = useState('');
-    const [newMapImage, setNewMapImage] = useState('');
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string>('');
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+            // Create a preview URL for displaying the image
+            const url = URL.createObjectURL(file);
+            setPreviewUrl(url);
+        }
+    };
+
+    const handleBrowseClick = () => {
+        fileInputRef.current?.click();
+    };
 
     const handleCreate = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newMapName.trim() || !newMapImage.trim()) {
+        if (!newMapName.trim() || !selectedFile) {
             alert('Please fill in all fields');
             return;
         }
-        onCreateMap(newMapName.trim(), newMapImage.trim());
+        // For now, use the preview URL as the image path
+        // In a production app, you'd upload the file to the server
+        onCreateMap(newMapName.trim(), previewUrl);
         setNewMapName('');
-        setNewMapImage('');
+        setSelectedFile(null);
+        setPreviewUrl('');
         setShowCreateForm(false);
+    };
+
+    const handleCancel = () => {
+        setShowCreateForm(false);
+        setNewMapName('');
+        setSelectedFile(null);
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            setPreviewUrl('');
+        }
     };
 
     const handleDelete = (id: string, name: string) => {
@@ -57,23 +86,37 @@ export function MapSelector({
             <div className="map-list">
                 {maps.map((map) => (
                     <div key={map.id} className="map-card" onClick={() => onSelectMap(map.id)}>
-                        <div className="map-card-icon">🗺️</div>
-                        <div className="map-card-info">
-                            <h3>{map.name}</h3>
-                            <span className="map-card-meta">
-                                {map.annotation_count} annotation{map.annotation_count !== 1 ? 's' : ''}
-                            </span>
+                        <div className="map-card-background">
+                            <img
+                                src={map.image_path}
+                                alt=""
+                                className="map-card-image"
+                                onError={(e) => {
+                                    // Hide the image if it fails to load
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                }}
+                            />
+                            <div className="map-card-overlay"></div>
                         </div>
-                        <button
-                            className="map-card-delete"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleDelete(map.id, map.name);
-                            }}
-                            title="Delete map"
-                        >
-                            🗑️
-                        </button>
+                        <div className="map-card-content">
+                            <div className="map-card-icon">🗺️</div>
+                            <div className="map-card-info">
+                                <h3>{map.name}</h3>
+                                <span className="map-card-meta">
+                                    {map.annotation_count} annotation{map.annotation_count !== 1 ? 's' : ''}
+                                </span>
+                            </div>
+                            <button
+                                className="map-card-delete"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(map.id, map.name);
+                                }}
+                                title="Delete map"
+                            >
+                                🗑️
+                            </button>
+                        </div>
                     </div>
                 ))}
 
@@ -94,14 +137,33 @@ export function MapSelector({
                         onChange={(e) => setNewMapName(e.target.value)}
                         autoFocus
                     />
+
                     <input
-                        type="text"
-                        placeholder="Image path (e.g., /maps/world.png)"
-                        value={newMapImage}
-                        onChange={(e) => setNewMapImage(e.target.value)}
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="file-input-hidden"
                     />
+
+                    <div className="file-picker" onClick={handleBrowseClick}>
+                        {selectedFile ? (
+                            <div className="file-selected">
+                                {previewUrl && (
+                                    <img src={previewUrl} alt="Preview" className="file-preview" />
+                                )}
+                                <span className="file-name">{selectedFile.name}</span>
+                            </div>
+                        ) : (
+                            <div className="file-placeholder">
+                                <span className="file-icon">📁</span>
+                                <span>Click to select an image file</span>
+                            </div>
+                        )}
+                    </div>
+
                     <div className="create-form-actions">
-                        <button type="button" onClick={() => setShowCreateForm(false)}>
+                        <button type="button" onClick={handleCancel}>
                             Cancel
                         </button>
                         <button type="submit" className="btn-primary">

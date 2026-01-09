@@ -34,21 +34,68 @@
 }
 
 .map-card {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 18px 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 80px;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
+    overflow: hidden;
 }
 
 .map-card:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Background image container */
+.map-card-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.map-card-image {
+    width: 100%;
+    height: 200%;
+    object-fit: cover;
+    object-position: center center;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    opacity: 0.6;
+}
+
+.map-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+            rgba(15, 15, 26, 0.95) 0%,
+            rgba(15, 15, 26, 0.7) 40%,
+            rgba(15, 15, 26, 0.4) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.map-card:hover .map-card-overlay {
+    background: linear-gradient(90deg,
+            rgba(26, 26, 46, 0.95) 0%,
+            rgba(26, 26, 46, 0.7) 40%,
+            rgba(26, 26, 46, 0.4) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Content layer */
+.map-card-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 18px 20px;
 }
 
 .map-card-icon {
@@ -67,7 +114,7 @@
 }
 
 .map-card-meta {
-    color: #888;
+    color: #aaa;
     font-size: 0.85rem;
 }
 
@@ -127,7 +174,7 @@
     font-size: 1.1rem;
 }
 
-.create-form input {
+.create-form input[type="text"] {
     width: 100%;
     padding: 12px 14px;
     margin-bottom: 12px;
@@ -139,13 +186,77 @@
     box-sizing: border-box;
 }
 
-.create-form input:focus {
+.create-form input[type="text"]:focus {
     outline: none;
     border-color: #667eea;
 }
 
-.create-form input::placeholder {
+.create-form input[type="text"]::placeholder {
     color: #666;
+}
+
+/* Hidden file input */
+.file-input-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* File picker styled as drop zone */
+.file-picker {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.file-picker:hover {
+    border-color: rgba(102, 126, 234, 0.5);
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.file-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    text-align: center;
+}
+
+.file-icon {
+    font-size: 2rem;
+}
+
+.file-selected {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-preview {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.file-name {
+    color: #fff;
+    font-size: 0.9rem;
+    word-break: break-all;
 }
 
 .create-form-actions {
