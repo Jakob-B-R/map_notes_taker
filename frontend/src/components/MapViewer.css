@@ -1,0 +1,128 @@
+.map-viewer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  background-color: #1a1a2e;
+}
+
+.map-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #888;
+  font-size: 1.2rem;
+  background-color: #1a1a2e;
+}
+
+/* Custom marker styles */
+.annotation-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.annotation-marker:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.annotation-marker.selected {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 3px #fff, 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.annotation-marker.city {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.annotation-marker.person {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.annotation-marker.event {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.annotation-marker.note {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Annotation popup */
+.leaflet-popup-content-wrapper {
+  background: #16213e;
+  color: #eee;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.leaflet-popup-content {
+  margin: 12px 16px;
+}
+
+.leaflet-popup-tip {
+  background: #16213e;
+}
+
+.annotation-popup {
+  min-width: 180px;
+}
+
+.annotation-popup h3 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.annotation-popup p {
+  margin: 0 0 12px 0;
+  font-size: 0.85rem;
+  color: #aaa;
+  line-height: 1.4;
+}
+
+.annotation-popup-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.annotation-popup-actions button {
+  flex: 1;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.btn-edit {
+  background-color: #667eea;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #5a6fd6;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}

@@ -1,0 +1,77 @@
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toolbar-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.annotation-count {
+    color: #888;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+}
+
+.toolbar-btn {
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ccc;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+}
+
+.toolbar-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.back-btn {
+    border-color: transparent;
+    background: transparent;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+}
+
+.save-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+}

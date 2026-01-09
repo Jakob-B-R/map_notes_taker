@@ -1,0 +1,173 @@
+.annotation-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.annotation-form {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 16px;
+    padding: 28px 32px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.annotation-form h2 {
+    margin: 0 0 24px 0;
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #aaa;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #666;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Type selector */
+.type-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.type-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.type-btn:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.type-btn.selected {
+    border-color: transparent;
+    color: #fff;
+}
+
+.type-btn.selected.city {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.type-btn.selected.person {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.type-btn.selected.event {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.type-btn.selected.note {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.type-icon {
+    font-size: 1.3rem;
+}
+
+.type-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Form actions */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.form-actions button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.form-actions button:active {
+    transform: scale(0.98);
+}
+
+.btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: #aaa;
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+}
