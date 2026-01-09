@@ -3,23 +3,17 @@ import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import type { Annotation, AnnotationType } from '../types';
 import { useAnnotationStore } from '../stores/annotationStore';
+import { useAnnotationTypesStore } from '../stores/annotationTypesStore';
 
 interface AnnotationMarkerProps {
     annotation: Annotation;
 }
 
-const ICONS: Record<AnnotationType, string> = {
-    city: '🏛️',
-    person: '👤',
-    event: '⚡',
-    note: '📝',
-};
-
 // Create a custom divIcon for each annotation type
-function createMarkerIcon(type: AnnotationType, isSelected: boolean): L.DivIcon {
+function createMarkerIcon(icon: string, typeId: string, isSelected: boolean): L.DivIcon {
     return L.divIcon({
         className: '',
-        html: `<div class="annotation-marker ${type} ${isSelected ? 'selected' : ''}">${ICONS[type]}</div>`,
+        html: `<div class="annotation-marker ${typeId} ${isSelected ? 'selected' : ''}">${icon}</div>`,
         iconSize: [32, 32],
         iconAnchor: [16, 16],
     });
@@ -30,12 +24,14 @@ export function AnnotationMarker({ annotation }: AnnotationMarkerProps) {
     const selectAnnotation = useAnnotationStore((s) => s.selectAnnotation);
     const openEditForm = useAnnotationStore((s) => s.openEditForm);
     const deleteAnnotation = useAnnotationStore((s) => s.deleteAnnotation);
+    const getTypeIcon = useAnnotationTypesStore((s) => s.getTypeIcon);
 
     const isSelected = selectedId === annotation.id;
+    const typeIcon = getTypeIcon(annotation.type);
 
     const icon = useMemo(
-        () => createMarkerIcon(annotation.type, isSelected),
-        [annotation.type, isSelected]
+        () => createMarkerIcon(typeIcon, annotation.type, isSelected),
+        [typeIcon, annotation.type, isSelected]
     );
 
     const handleEdit = () => {

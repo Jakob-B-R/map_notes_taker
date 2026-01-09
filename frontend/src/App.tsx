@@ -3,6 +3,7 @@ import { MapViewer } from './components/MapViewer';
 import { MapSelector } from './components/MapSelector';
 import { Toolbar } from './components/Toolbar';
 import { AnnotationForm } from './components/AnnotationForm';
+import { AnnotationSidebar } from './components/AnnotationSidebar';
 import { useAnnotationStore } from './stores/annotationStore';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import * as api from './api/client';
@@ -142,12 +143,15 @@ function App() {
           onBack={handleBack}
           isSaving={isSaving}
         />
-        <div className="map-editor">
-          <MapViewer
-            imagePath={currentMapData.image_path}
-            imageWidth={DEFAULT_IMAGE_WIDTH}
-            imageHeight={DEFAULT_IMAGE_HEIGHT}
-          />
+        <div className="app-content">
+          <AnnotationSidebar />
+          <div className="map-editor">
+            <MapViewer
+              imagePath={currentMapData.image_path}
+              imageWidth={DEFAULT_IMAGE_WIDTH}
+              imageHeight={DEFAULT_IMAGE_HEIGHT}
+            />
+          </div>
         </div>
         <AnnotationForm />
       </div>

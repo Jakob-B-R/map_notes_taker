@@ -19,6 +19,7 @@ interface AnnotationState {
     addAnnotation: (annotation: Annotation) => void;
     updateAnnotation: (id: string, updates: Partial<Annotation>) => void;
     deleteAnnotation: (id: string) => void;
+    convertAnnotationsType: (fromType: string, toType: string) => void;
 
     // UI Actions
     selectAnnotation: (id: string | null) => void;
@@ -71,6 +72,13 @@ export const useAnnotationStore = create<AnnotationState>()(
                     selectedAnnotationId:
                         state.selectedAnnotationId === id ? null : state.selectedAnnotationId,
                     isFormOpen: state.selectedAnnotationId === id ? false : state.isFormOpen,
+                })),
+
+            convertAnnotationsType: (fromType, toType) =>
+                set((state) => ({
+                    annotations: state.annotations.map((a) =>
+                        a.type === fromType ? { ...a, type: toType } : a
+                    ),
                 })),
 
             selectAnnotation: (id) => set({ selectedAnnotationId: id }),

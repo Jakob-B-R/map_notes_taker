@@ -26,6 +26,12 @@ body {
   width: 100%;
 }
 
+.app-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
 .map-editor {
   flex: 1;
   position: relative;

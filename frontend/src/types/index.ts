@@ -1,4 +1,12 @@
-export type AnnotationType = 'city' | 'person' | 'event' | 'note';
+// Dynamic annotation type - stored as string, validated by annotationTypesStore
+export type AnnotationType = string;
+
+export interface AnnotationTypeConfig {
+    id: string;       // slug like "city" or "custom-1"
+    name: string;     // display name
+    icon: string;     // emoji
+    isDefault?: boolean;
+}
 
 export interface Annotation {
     id: string;

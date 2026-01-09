@@ -2,16 +2,12 @@ import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { Annotation, AnnotationType } from '../types';
 import { useAnnotationStore } from '../stores/annotationStore';
+import { useAnnotationTypesStore } from '../stores/annotationTypesStore';
 import './AnnotationForm.css';
 
-const ANNOTATION_TYPES: { value: AnnotationType; label: string; icon: string }[] = [
-    { value: 'city', label: 'City', icon: '🏛️' },
-    { value: 'person', label: 'Person', icon: '👤' },
-    { value: 'event', label: 'Event', icon: '⚡' },
-    { value: 'note', label: 'Note', icon: '📝' },
-];
-
 export function AnnotationForm() {
+    const types = useAnnotationTypesStore((s) => s.types);
+
     const isFormOpen = useAnnotationStore((s) => s.isFormOpen);
     const formMode = useAnnotationStore((s) => s.formMode);
     const pendingPosition = useAnnotationStore((s) => s.pendingPosition);
@@ -99,15 +95,15 @@ export function AnnotationForm() {
                     <div className="form-group">
                         <label>Type</label>
                         <div className="type-selector">
-                            {ANNOTATION_TYPES.map((t) => (
+                            {types.map((t) => (
                                 <button
-                                    key={t.value}
+                                    key={t.id}
                                     type="button"
-                                    className={`type-btn ${type === t.value ? 'selected' : ''} ${t.value}`}
-                                    onClick={() => setType(t.value)}
+                                    className={`type-btn ${type === t.id ? 'selected' : ''} ${t.id}`}
+                                    onClick={() => setType(t.id)}
                                 >
                                     <span className="type-icon">{t.icon}</span>
-                                    <span className="type-label">{t.label}</span>
+                                    <span className="type-label">{t.name}</span>
                                 </button>
                             ))}
                         </div>
