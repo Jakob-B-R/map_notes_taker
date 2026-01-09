@@ -70,6 +70,11 @@ export function MapViewer({ imagePath, imageWidth, imageHeight }: MapViewerProps
                 zoom={0}
                 minZoom={-3}
                 maxZoom={4}
+                zoomSnap={0}
+                zoomDelta={0.1}
+                wheelDebounceTime={10}
+                // Increase this to make the zoom feel more granular
+                wheelPxPerZoomLevel={120}
                 crs={L.CRS.Simple}
                 className="map-container"
             >
