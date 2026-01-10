@@ -24,6 +24,7 @@ export function AnnotationMarker({ annotation }: AnnotationMarkerProps) {
     const selectAnnotation = useAnnotationStore((s) => s.selectAnnotation);
     const openEditForm = useAnnotationStore((s) => s.openEditForm);
     const deleteAnnotation = useAnnotationStore((s) => s.deleteAnnotation);
+    const updateAnnotation = useAnnotationStore((s) => s.updateAnnotation);
     const getTypeIcon = useAnnotationTypesStore((s) => s.getTypeIcon);
 
     const isSelected = selectedId === annotation.id;
@@ -48,8 +49,17 @@ export function AnnotationMarker({ annotation }: AnnotationMarkerProps) {
         <Marker
             position={[annotation.y, annotation.x]}
             icon={icon}
+            draggable={true}
             eventHandlers={{
                 click: () => selectAnnotation(annotation.id),
+                dragend: (e) => {
+                    const marker = e.target;
+                    const position = marker.getLatLng();
+                    updateAnnotation(annotation.id, {
+                        x: position.lng,
+                        y: position.lat,
+                    });
+                },
             }}
         >
             <Popup>

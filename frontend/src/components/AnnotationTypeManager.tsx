@@ -1,16 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import EmojiPicker, { Theme, type EmojiClickData } from 'emoji-picker-react';
 import { useAnnotationTypesStore } from '../stores/annotationTypesStore';
 import { useAnnotationStore } from '../stores/annotationStore';
 import './AnnotationTypeManager.css';
 
-// Common emoji options for annotation types
-const EMOJI_OPTIONS = [
-    '📍', '📌', '🏛️', '🏰', '🏠', '🏢', '⛪', '🕌', '🗼', '🌉',
-    '👤', '👥', '👑', '⚔️', '🛡️', '💀', '🧙', '🤴', '👸', '🧑‍🌾',
-    '⚡', '🔥', '💥', '⭐', '🌟', '💫', '🎯', '🚩', '⚠️', '❗',
-    '📝', '📜', '📖', '🗺️', '💎', '🔮', '🗡️', '🏹', '🎭', '🎪',
-    '🌲', '🏔️', '🌊', '🏖️', '🌋', '🏜️', '❄️', '🌸', '🍂', '🌙',
-];
 
 interface AnnotationTypeManagerProps {
     onClose: () => void;
@@ -31,6 +24,18 @@ export function AnnotationTypeManager({ onClose }: AnnotationTypeManagerProps) {
     const [editName, setEditName] = useState('');
     const [editIcon, setEditIcon] = useState('');
     const [showEmojiPicker, setShowEmojiPicker] = useState<'new' | 'edit' | null>(null);
+    const pickerRef = useRef<HTMLDivElement>(null);
+
+    // Close picker when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
+                setShowEmojiPicker(null);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleAddType = () => {
         if (!newTypeName.trim()) {
@@ -87,14 +92,15 @@ export function AnnotationTypeManager({ onClose }: AnnotationTypeManagerProps) {
         deleteType(typeId);
     };
 
-    const selectEmoji = (emoji: string) => {
+    const handleEmojiClick = (emojiData: EmojiClickData) => {
         if (showEmojiPicker === 'new') {
-            setNewTypeIcon(emoji);
+            setNewTypeIcon(emojiData.emoji);
         } else if (showEmojiPicker === 'edit') {
-            setEditIcon(emoji);
+            setEditIcon(emojiData.emoji);
         }
         setShowEmojiPicker(null);
     };
+
 
     return (
         <div className="type-manager-overlay" onClick={onClose}>
@@ -109,13 +115,27 @@ export function AnnotationTypeManager({ onClose }: AnnotationTypeManagerProps) {
                     <div className="add-type-section">
                         <h3>Add New Type</h3>
                         <div className="add-type-form">
-                            <button
-                                type="button"
-                                className="emoji-selector"
-                                onClick={() => setShowEmojiPicker(showEmojiPicker === 'new' ? null : 'new')}
-                            >
-                                {newTypeIcon}
-                            </button>
+                            <div className="emoji-picker-container" ref={showEmojiPicker === 'new' ? pickerRef : null}>
+                                <button
+                                    type="button"
+                                    className="emoji-selector-btn"
+                                    onClick={() => setShowEmojiPicker(showEmojiPicker === 'new' ? null : 'new')}
+                                >
+                                    {newTypeIcon}
+                                </button>
+                                {showEmojiPicker === 'new' && (
+                                    <div className="emoji-picker-popup">
+                                        <EmojiPicker
+                                            onEmojiClick={handleEmojiClick}
+                                            theme={Theme.DARK}
+                                            autoFocusSearch={false}
+                                            lazyLoadEmojis={true}
+                                            width={350}
+                                            height={450}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                             <input
                                 type="text"
                                 placeholder="Type name..."
@@ -131,20 +151,6 @@ export function AnnotationTypeManager({ onClose }: AnnotationTypeManagerProps) {
                                 Add
                             </button>
                         </div>
-                        {showEmojiPicker === 'new' && (
-                            <div className="emoji-picker">
-                                {EMOJI_OPTIONS.map((emoji) => (
-                                    <button
-                                        key={emoji}
-                                        type="button"
-                                        className="emoji-option"
-                                        onClick={() => selectEmoji(emoji)}
-                                    >
-                                        {emoji}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
                     </div>
 
                     {/* Type list */}
@@ -154,13 +160,27 @@ export function AnnotationTypeManager({ onClose }: AnnotationTypeManagerProps) {
                             <div key={type.id} className="type-row">
                                 {editingId === type.id ? (
                                     <>
-                                        <button
-                                            type="button"
-                                            className="emoji-selector"
-                                            onClick={() => setShowEmojiPicker(showEmojiPicker === 'edit' ? null : 'edit')}
-                                        >
-                                            {editIcon}
-                                        </button>
+                                        <div className="emoji-picker-container" ref={showEmojiPicker === 'edit' ? pickerRef : null}>
+                                            <button
+                                                type="button"
+                                                className="emoji-selector-btn"
+                                                onClick={() => setShowEmojiPicker(showEmojiPicker === 'edit' ? null : 'edit')}
+                                            >
+                                                {editIcon}
+                                            </button>
+                                            {showEmojiPicker === 'edit' && (
+                                                <div className="emoji-picker-popup">
+                                                    <EmojiPicker
+                                                        onEmojiClick={handleEmojiClick}
+                                                        theme={Theme.DARK}
+                                                        autoFocusSearch={false}
+                                                        lazyLoadEmojis={true}
+                                                        width={350}
+                                                        height={450}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
                                         <input
                                             type="text"
                                             value={editName}
@@ -198,20 +218,6 @@ export function AnnotationTypeManager({ onClose }: AnnotationTypeManagerProps) {
                                 )}
                             </div>
                         ))}
-                        {showEmojiPicker === 'edit' && (
-                            <div className="emoji-picker">
-                                {EMOJI_OPTIONS.map((emoji) => (
-                                    <button
-                                        key={emoji}
-                                        type="button"
-                                        className="emoji-option"
-                                        onClick={() => selectEmoji(emoji)}
-                                    >
-                                        {emoji}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>

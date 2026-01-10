@@ -22,7 +22,7 @@ function MapClickHandler() {
     const openCreateForm = useAnnotationStore((s) => s.openCreateForm);
 
     useMapEvents({
-        click(e) {
+        dblclick(e) {
             openCreateForm({ x: e.latlng.lng, y: e.latlng.lat });
         },
     });
@@ -76,6 +76,7 @@ export function MapViewer({ imagePath, imageWidth, imageHeight }: MapViewerProps
                 // Increase this to make the zoom feel more granular
                 wheelPxPerZoomLevel={120}
                 crs={L.CRS.Simple}
+                doubleClickZoom={false}
                 className="map-container"
             >
                 <ImageOverlay url={imagePath} bounds={bounds} />
