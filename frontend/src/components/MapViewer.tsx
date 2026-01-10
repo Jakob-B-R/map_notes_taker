@@ -77,6 +77,7 @@ export function MapViewer({ imagePath, imageWidth, imageHeight }: MapViewerProps
                 wheelPxPerZoomLevel={120}
                 crs={L.CRS.Simple}
                 doubleClickZoom={false}
+                attributionControl={false}
                 className="map-container"
             >
                 <ImageOverlay url={imagePath} bounds={bounds} />
