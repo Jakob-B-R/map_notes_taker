@@ -51,4 +51,5 @@ frontend/public/maps/*.png
 
 # Data storage (keep directory structure but not contents)
 backend/data/maps/*.json
+backend/data/uploads/*
 !backend/data/maps/.gitkeep
