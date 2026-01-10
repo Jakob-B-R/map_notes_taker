@@ -4,6 +4,7 @@ from flask_cors import CORS
 
 from routes.maps import maps_bp
 from routes.annotations import annotations_bp
+from routes.uploads import uploads_bp
 
 app = Flask(__name__)
 CORS(app)  # Allow React dev server to make requests
@@ -11,6 +12,7 @@ CORS(app)  # Allow React dev server to make requests
 # Register blueprints
 app.register_blueprint(maps_bp, url_prefix="/api/maps")
 app.register_blueprint(annotations_bp, url_prefix="/api/maps")
+app.register_blueprint(uploads_bp, url_prefix="/api/uploads")
 
 
 @app.route("/api/health", methods=["GET"])

@@ -10,13 +10,24 @@ import * as api from './api/client';
 import type { MapSummary, MapData } from './types';
 import './App.css';
 
-// Default image dimensions - in real app, these would be calculated
-const DEFAULT_IMAGE_WIDTH = 1920;
-const DEFAULT_IMAGE_HEIGHT = 1080;
+// Helper function to load image dimensions
+function loadImageDimensions(src: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+    img.onerror = () => {
+      reject(new Error('Failed to load image'));
+    };
+    img.src = src;
+  });
+}
 
 function App() {
   const [maps, setMaps] = useState<MapSummary[]>([]);
   const [currentMapData, setCurrentMapData] = useState<MapData | null>(null);
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
   const [isLoadingMaps, setIsLoadingMaps] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -47,6 +58,9 @@ function App() {
   const handleSelectMap = async (id: string) => {
     try {
       const mapData = await api.fetchMap(id);
+      // Load actual image dimensions to maintain aspect ratio
+      const dimensions = await loadImageDimensions(mapData.image_path);
+      setImageDimensions(dimensions);
       setCurrentMapData(mapData);
       loadMap(mapData);
     } catch (err) {
@@ -55,9 +69,13 @@ function App() {
     }
   };
 
-  const handleCreateMap = async (name: string, imagePath: string) => {
+  const handleCreateMap = async (name: string, imageFile: File) => {
     try {
-      const newMap = await api.createMap(name, imagePath);
+      // First, upload the image to get a persistent URL
+      const uploadResult = await api.uploadImage(imageFile);
+
+      // Then create the map with the persistent URL
+      const newMap = await api.createMap(name, uploadResult.url);
       setMaps((prev) => [...prev, {
         id: newMap.id,
         name: newMap.name,
@@ -66,7 +84,7 @@ function App() {
       }]);
     } catch (err) {
       console.error('Failed to create map:', err);
-      alert('Failed to create map');
+      throw err; // Re-throw so the caller can handle it
     }
   };
 
@@ -82,6 +100,7 @@ function App() {
 
   const handleBack = () => {
     setCurrentMapData(null);
+    setImageDimensions(null);
     clearMap();
     loadMaps(); // Refresh the list
   };
@@ -133,8 +152,8 @@ function App() {
     }
   }, [currentMapData, annotations]);
 
-  // Show map editor if a map is selected
-  if (currentMapData) {
+  // Show map editor if a map is selected and dimensions are loaded
+  if (currentMapData && imageDimensions) {
     return (
       <div className="app">
         <Toolbar
@@ -148,8 +167,8 @@ function App() {
           <div className="map-editor">
             <MapViewer
               imagePath={currentMapData.image_path}
-              imageWidth={DEFAULT_IMAGE_WIDTH}
-              imageHeight={DEFAULT_IMAGE_HEIGHT}
+              imageWidth={imageDimensions.width}
+              imageHeight={imageDimensions.height}
             />
           </div>
         </div>

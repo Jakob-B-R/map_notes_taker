@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, Popup, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
 import type { Annotation } from '../types';
 import { useAnnotationStore } from '../stores/annotationStore';
@@ -66,6 +66,9 @@ export function AnnotationMarker({ annotation }: AnnotationMarkerProps) {
                     </div>
                 </div>
             </Popup>
+            <Tooltip direction="top" offset={[0, -10]} opacity={1}>
+                <span className="annotation-tooltip-content">{annotation.title}</span>
+            </Tooltip>
         </Marker>
     );
 }

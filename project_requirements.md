@@ -11,8 +11,18 @@ The app should have ctrl+z and cttl+shift+z for undo and redo.
 
 A user should be able to have multiple maps saved, with different annotations on each.
 
+We don't need a log in / registration page yet, but will add that in later.
+
 ## Architecture
 
 1) Flask
 2) If we need a more comprehensive front end, we can discuss using React or Vue.
 3) If we need a database, there is a local Postgres database we can use
+
+
+## how to run
+
+source .venv/bin/activate
+python backend/app.py
+
+npm run dev

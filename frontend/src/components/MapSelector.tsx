@@ -5,7 +5,7 @@ import './MapSelector.css';
 interface MapSelectorProps {
     maps: MapSummary[];
     onSelectMap: (id: string) => void;
-    onCreateMap: (name: string, imagePath: string) => void;
+    onCreateMap: (name: string, imageFile: File) => void;
     onDeleteMap: (id: string) => void;
     isLoading: boolean;
 }
@@ -21,13 +21,14 @@ export function MapSelector({
     const [newMapName, setNewMapName] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string>('');
+    const [isCreating, setIsCreating] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setSelectedFile(file);
-            // Create a preview URL for displaying the image
+            // Create a preview URL for displaying the image (local only, not saved)
             const url = URL.createObjectURL(file);
             setPreviewUrl(url);
         }
@@ -37,19 +38,30 @@ export function MapSelector({
         fileInputRef.current?.click();
     };
 
-    const handleCreate = (e: React.FormEvent) => {
+    const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newMapName.trim() || !selectedFile) {
             alert('Please fill in all fields');
             return;
         }
-        // For now, use the preview URL as the image path
-        // In a production app, you'd upload the file to the server
-        onCreateMap(newMapName.trim(), previewUrl);
-        setNewMapName('');
-        setSelectedFile(null);
-        setPreviewUrl('');
-        setShowCreateForm(false);
+
+        setIsCreating(true);
+        try {
+            // Pass the file to the parent, which will handle the upload
+            await onCreateMap(newMapName.trim(), selectedFile);
+            setNewMapName('');
+            setSelectedFile(null);
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+                setPreviewUrl('');
+            }
+            setShowCreateForm(false);
+        } catch (err) {
+            console.error('Failed to create map:', err);
+            alert('Failed to create map');
+        } finally {
+            setIsCreating(false);
+        }
     };
 
     const handleCancel = () => {
@@ -163,11 +175,11 @@ export function MapSelector({
                     </div>
 
                     <div className="create-form-actions">
-                        <button type="button" onClick={handleCancel}>
+                        <button type="button" onClick={handleCancel} disabled={isCreating}>
                             Cancel
                         </button>
-                        <button type="submit" className="btn-primary">
-                            Create
+                        <button type="submit" className="btn-primary" disabled={isCreating}>
+                            {isCreating ? 'Uploading...' : 'Create'}
                         </button>
                     </div>
                 </form>

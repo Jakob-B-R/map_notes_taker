@@ -1,5 +1,8 @@
 # Other
 project_requirements.md
+frontend/public/vite.svg
+frontend/src/assets/react.svg
+backend/data/uploads/*
 
 # Dependencies
 node_modules/

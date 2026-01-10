@@ -11,6 +11,18 @@ async function handleResponse<T>(response: Response): Promise<T> {
     return response.json();
 }
 
+// Upload API
+export async function uploadImage(file: File): Promise<{ filename: string; url: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${API_BASE}/uploads`, {
+        method: 'POST',
+        body: formData,
+    });
+    return handleResponse<{ filename: string; url: string }>(response);
+}
+
 // Map API
 export async function fetchMaps() {
     const response = await fetch(`${API_BASE}/maps`);
